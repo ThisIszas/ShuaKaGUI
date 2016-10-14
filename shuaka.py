@@ -1,16 +1,16 @@
-﻿#coding:utf-8
+﻿# coding:utf-8
 import urllib
 import urllib2
 import re
 from lxml import etree
 import cookielib
-import time
 
 
 def get_real(info):
     pattern = "[^\s]+"
     real = re.findall(pattern, info, re.S)
-    return real[0]
+    if len(real) > 0:
+        return real[0]
 
 
 def get_x_selectoro(url):
@@ -51,10 +51,11 @@ def zaocao(zao_cao_url, count):
 def shangke(club_sk_url, count):
     sk_selector = get_x_selectoro(club_sk_url)
     sk_info = sk_selector.xpath('//div[@class="divHeight"]/table[@cellpadding="0"]/tr/td[7]/text()')
-    for each in sk_info:
-        useful_time = get_real(each)
-        if useful_time == u"有效 ":
-            count += 1
+    # for each in sk_info:
+    #     useful_time = get_real(each)
+    #     if useful_time == u"有效 ":
+    #         count += 1
+    count = get_useful_time(sk_info, count)
     list2 = []
     list2.append(len(sk_info))
     list2.append(count)
@@ -83,6 +84,24 @@ def pingshishuaka_2(zizhuxuexi_sk_url, count):
     list2.append(count)
     return list2
 
+
+def show_detail(urls):
+    selectors = get_x_selectoro(urls)
+    infos = selectors.xpath('//div[@class="divHeight"]/table[@cellpadding="0"]/tr/td/text()')
+    line_info = []
+    all_info = []
+    for i in range(len(infos)):
+        temp = infos[i]
+        s = get_real(temp)
+        if s:
+            line_info.append(s)
+        # if (i+1) % 7 == 0:
+        if s == u"有效" or s == u"有效 ":
+            all_info.append(line_info)
+            line_info = []
+            print
+    return all_info
+
 def get_info(user_name, pw):
     get_cookies()
     login_ulr = "http://172.16.51.37/user_login.html"
@@ -110,4 +129,9 @@ def get_info(user_name, pw):
     rname = re.findall(pattern, rname, re.S)
     real_name = rname[0]
     return real_name
+
+# stsuzhi_sk_url = "http://172.16.51.37/attendanceSTTZ_list.html"
+# ffff = "http://172.16.51.37/attendanceZZXX_list.html"
+# get_info('2014021065', "2014021065")
+# show_detail(ffff)
 

@@ -33,7 +33,9 @@ class BasePanel(wx.Panel):
         self.lal_choice = wx.StaticText(self, label=u'选择要进行的操作', pos=(5, 125))
         self.edit_choice = wx.ComboBox(self, pos=(5, 145), size=(95, -1), choices=self.choice, style=wx.CB_DROPDOWN)
         self.choice_confirm = wx.Button(self, label=u"确定", pos=(106, 142))
+        self.select_detail = wx.Button(self, label=u"查询详细", pos=(196, 142))
         self.Bind(wx.EVT_BUTTON, self.choice_confirm_buttons, self.choice_confirm)
+        self.Bind(wx.EVT_BUTTON, self.show_detail, self.select_detail)
 
     def confirm_button_fun(self, event):
         self.logger.AppendText(u'用户名和密码已输入\n')
@@ -56,13 +58,13 @@ class BasePanel(wx.Panel):
         if value == u'早操刷卡次数':
             zao_cap_url = 'http://172.16.51.37/personQueryZC_personalDetailQuery.html'
             self.count = shuaka.zaocao(zao_cap_url, 0)
-            self.logger.AppendText(u'早操刷卡有效次数为:' + str(self.count[1]) + u" 无效次数为:" + \
+            self.logger.AppendText(u'\n早操刷卡有效次数为:' + str(self.count[1]) + u" 无效次数为:" + \
                                    str(self.count[0]-self.count[1]) + u" 总数为:" + str(self.count[0]) + '\n\n')
 
         elif value == u'体育课刷卡次数':
             club_sk_url = "http://172.16.51.37/personJLBQueryZC_personalJLBDetailQuery.html"
             self.count = shuaka.shangke(club_sk_url, 0)
-            self.logger.AppendText(u'体育课刷卡有效次数为:' + str(self.count[1]) + u" 无效次数为:" + \
+            self.logger.AppendText(u'\n体育课刷卡有效次数为:' + str(self.count[1]) + u" 无效次数为:" + \
                                    str(self.count[0]-self.count[1]) + u" 总数为:" + str(self.count[0]) + '\n\n')
 
         elif value == u'平时刷卡次数':
@@ -71,13 +73,48 @@ class BasePanel(wx.Panel):
             count_1 = shuaka.pingshishuaka_1(stsuzhi_sk_url, 0)
             count_2 = shuaka.pingshishuaka_2(zizhuxuexi_sk_url, 0)
             count = count_1[0] + count_2[0]
-            self.logger.AppendText(u'身体素质拓展刷卡有效次数为:' + str(count_1[1]) + u" 无效次数为:" + \
+            self.logger.AppendText(u'\n身体素质拓展刷卡有效次数为:' + str(count_1[1]) + u" 无效次数为:" + \
                                    str(count_1[0] - count_1[0]) + '\n')
             self.logger.AppendText(u'自主学习刷卡有效次数为:' + str(count_2[1]) + u" 无效次数为:" + \
                                    str(count_2[0] - count_2[0]) + '\n')
             self.logger.AppendText(u'总有效次数为:' + str(count_1[1] + count_2[1]) + u' 总次数为:' + str(count) \
                                    + '\n\n')
 
+    def show_detail(self, event):
+        word = self.edit_choice.GetSelection()
+        value = self.edit_choice.GetItems()[word]
+        deatils = []
+        if value == u'早操刷卡次数':
+            zao_cap_url = "http://172.16.51.37/personQueryZC_personalDetailQuery.html"
+            deatils = shuaka.show_detail(zao_cap_url)
+            self.logger.AppendText('\n')
+            for each in deatils:
+                for each_2 in each:
+                    self.logger.AppendText(each_2 + " ")
+                self.logger.AppendText('\n')
+        elif value == u'体育课刷卡次数':
+            club_sk_url = "http://172.16.51.37/personJLBQueryZC_personalJLBDetailQuery.html"
+            deatils = shuaka.show_detail(club_sk_url)
+            self.logger.AppendText('\n')
+            for each in deatils:
+                for each_2 in each:
+                    self.logger.AppendText(each_2 + " ")
+                self.logger.AppendText('\n')
+        elif value == u'平时刷卡次数':
+            stsuzhi_sk_url = "http://172.16.51.37/attendanceSTTZ_list.html"
+            zizhuxuexi_sk_url = "http://172.16.51.37/attendanceZZXX_list.html"
+            self.logger.AppendText(u"身体素质拓展:" + '\n')
+            deatils = shuaka.show_detail(stsuzhi_sk_url)
+            deatils_2 = shuaka.show_detail(zizhuxuexi_sk_url)
+            for each in deatils:
+                for each_2 in each:
+                    self.logger.AppendText(each_2 + " ")
+                self.logger.AppendText('\n')
+            self.logger.AppendText(u'自主学习:' + '\n')
+            for each in deatils_2:
+                for each_2 in each:
+                    self.logger.AppendText(each_2 + " ")
+                self.logger.AppendText('\n')
     def evt_text(self, event):
         self.logger.AppendText('EvtText: %s\n' % event.GetString())
 
