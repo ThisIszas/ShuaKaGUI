@@ -130,8 +130,4 @@ def get_info(user_name, pw):
     real_name = rname[0]
     return real_name
 
-# stsuzhi_sk_url = "http://172.16.51.37/attendanceSTTZ_list.html"
-# ffff = "http://172.16.51.37/attendanceZZXX_list.html"
-# get_info('2014021065', "2014021065")
-# show_detail(ffff)
 
