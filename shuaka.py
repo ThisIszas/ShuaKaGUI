@@ -101,12 +101,11 @@ def pingshishuaka_2(zizhuxuexi_sk_url, count, pn=1, length=0):
     return list2
 
 
-all_info = []
-def show_detail(urls, pn=1):
+def show_detail(urls, pn=1, all_info=[]):
     selectors = get_x_selectoro(urls, pn)
     infos = selectors.xpath('//div[@class="divHeight"]/table[@cellpadding="0"]/tr/td/text()')
     line_info = []
-    global all_info
+    # global all_info
     if pn == 1:
         all_info = []
     flag = next_page_flag(urls)
@@ -119,8 +118,9 @@ def show_detail(urls, pn=1):
             all_info.append(line_info)
             line_info = []
     if flag and pn != 2:
-        show_detail(urls, pn+1)
+        show_detail(urls, pn+1, all_info)
     return all_info
+
 
 def get_info(user_name, pw):
     get_cookies()
