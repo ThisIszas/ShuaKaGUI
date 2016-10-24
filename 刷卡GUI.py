@@ -17,7 +17,7 @@ class BasePanel(wx.Panel):
 
         self.quote = wx.StaticText(self, label=" Hi, it's really nice that you can use this small program. ",
                                    pos=(0, 20))
-        self.logger = wx.TextCtrl(self, pos=(5, 180), size=(440, 240), style=wx.MULTIPLE | wx.TE_READONLY)
+        self.logger = wx.TextCtrl(self, pos=(5, 180), size=(465, 240), style=wx.MULTIPLE | wx.TE_READONLY)
 
         self.confirm_button = wx.Button(self, label=u"确定", pos=(160, 86))
         self.Bind(wx.EVT_BUTTON, self.confirm_button_fun, self.confirm_button)
@@ -74,11 +74,11 @@ class BasePanel(wx.Panel):
             count_2 = shuaka.pingshishuaka_2(zizhuxuexi_sk_url, 0)
             count = count_1[0] + count_2[0]
             self.logger.AppendText(u'\n身体素质拓展刷卡有效次数为:' + str(count_1[1]) + u" 无效次数为:" + \
-                                   str(count_1[0] - count_1[0]) + '\n')
+                                   str(count_1[0] - count_1[1]) + '\n')
             self.logger.AppendText(u'自主学习刷卡有效次数为:' + str(count_2[1]) + u" 无效次数为:" + \
-                                   str(count_2[0] - count_2[0]) + '\n')
+                                   str(count_2[0] - count_2[1]) + '\n')
             self.logger.AppendText(u'总有效次数为:' + str(count_1[1] + count_2[1]) + u' 总次数为:' + str(count) \
-                                   + '\n\n')
+                                   + u' 总无效次数为:' + str(count-count_1[1]-count_2[1])+'\n\n')
 
     def show_detail(self, event):
         word = self.edit_choice.GetSelection()
@@ -129,7 +129,7 @@ class BasePanel(wx.Panel):
         return event.GetString()
 
 app = wx.App(False)
-frame = MyFrame(None, u'好好学习,天天刷卡', (470,470))
+frame = MyFrame(None, u'好好学习,天天刷卡', (490,470))
 panel = BasePanel(frame)
 frame.Show()
 app.MainLoop()

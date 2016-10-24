@@ -105,7 +105,6 @@ def show_detail(urls, pn=1, all_info=[]):
     selectors = get_x_selectoro(urls, pn)
     infos = selectors.xpath('//div[@class="divHeight"]/table[@cellpadding="0"]/tr/td/text()')
     line_info = []
-    # global all_info
     if pn == 1:
         all_info = []
     flag = next_page_flag(urls)
