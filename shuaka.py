@@ -113,7 +113,7 @@ def show_detail(urls, pn=1, all_info=[]):
         s = get_real(temp)
         if s:
             line_info.append(s)
-        if s == u"有效" or s == u"有效 ":
+        if s == u"有效" or s == u"有效 " or s == u"无效 " or s == u"有效":
             all_info.append(line_info)
             line_info = []
     if flag and pn != 2:
